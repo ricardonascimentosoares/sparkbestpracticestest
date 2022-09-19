@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sat Sep 17 13:15:13 AMT 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0183-4c72-7749-000009db8600 
+on database directory /home/ricardo/PycharmProjects/sparkbestpractices/metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@5ffd2b27 
+Loaded from file:/home/ricardo/PycharmProjects/sparkbestpractices/venv/lib/python3.10/site-packages/pyspark/jars/derby-10.14.2.0.jar
+java.vendor=Ubuntu
+java.runtime.version=11.0.16+8-post-Ubuntu-0ubuntu122.04
+user.dir=/home/ricardo/PycharmProjects/sparkbestpractices
+os.name=Linux
+os.arch=amd64
+os.version=5.15.0-47-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
