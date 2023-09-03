@@ -1,31 +1,36 @@
+from typing import List
 from pyspark.sql import DataFrame
-from spark_job_pattern import SparkJob, SparkJobExecutor
+from spark_job_pattern import SparkJob
+import pyspark.sql.functions as F
 
 
 class SpotifySparkJob(SparkJob):
 
-    def extract(self, source_path, reader) -> DataFrame:
-        df = reader.format('csv')\
-            .option("header", "true")\
-            .option("inferSchema", "true")\
-            .load(source_path)
-        df.show()
+    def load(self, spark) -> List[DataFrame]:
+        df = (spark
+              .read
+              .format('csv')
+              .option("header", "true")
+              .option("inferSchema", "true")
+              .load("data.csv")
+              )
+        return [df]
+
+    def transform(self, sources: List[DataFrame]) -> DataFrame:
+        df = sources[0]
+        df = (df
+              .select('key', 'loudness', 'duration_ms', 'liked')
+              .withColumn('duration_minutes', (F.col('duration_ms') / 1000) / 60)
+              )
         return df
 
-    def transform(self, dataset) -> DataFrame:
-        df = dataset[dataset.liked == 1] \
-            .select('key', 'loudness', 'duration_ms', 'liked') \
-            .withColumn('duration_minutes', (dataset.duration_ms / 1000) / 60)
-        return df
-
-    def load(self, target_path, dataset):
-        dataset.write.mode("overwrite").format('parquet').save(target_path)
-        dataset.show()
+    def save(self, target: DataFrame):
+        (target
+         .write
+         .mode("overwrite")
+         .format('parquet')
+         .save("results/")
+         )
 
 
-class SpotifySparkJobExecutor(SparkJobExecutor):
-    def execute(self):
-        SpotifySparkJob(source_path='data.csv', target_path='results/').run()
-
-
-SpotifySparkJobExecutor().execute()
+SpotifySparkJob().debug()
